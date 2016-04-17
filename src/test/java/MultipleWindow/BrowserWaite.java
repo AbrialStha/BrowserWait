@@ -8,8 +8,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -25,13 +27,30 @@ import org.testng.annotations.Test;
  * a WebDriver instance to the time we kill it via WebDriver.Quit or by manually killing 
  * the process. With this understanding lets first open some windows using Selenium WebDriver. 
  */
-public class MultipleWindow {
+public class BrowserWaite {
 	
 	WebDriver  driver;
 	
 	@BeforeTest
 	public void setup(){
 		driver = new FirefoxDriver();
+		
+		/**
+		 * PageLoadTimeout Command:
+		 *Purpose-->
+		 *Sets the amount of time to wait for a page load to complete before throwing an error.
+		 *If the timeout is negative, page loads can be indefinite.
+		 */
+		driver.manage().timeouts().pageLoadTimeout(100, TimeUnit.SECONDS);
+		
+		/**
+		 * SetScriptTimeout Command:
+		 * Purpose-->> 
+		 * Sets the amount of time to wait for an asynchronous script to finish execution before 
+		 * throwing an error. If the timeout is negative, then the script will be allowed to run 
+		 * indefinitely
+		 */
+		 driver.manage().timeouts().setScriptTimeout(100,TimeUnit.SECONDS);
 	}
 	
 //	public WebDriver driver(String driverName){
@@ -69,12 +88,22 @@ public class MultipleWindow {
 	 */
 	@Test
 	public void fluientWait(){
-		// Waiting 30 seconds for an element to be present on the page, checking
-		 
-		  // for its presence once every 5 seconds.
-		 Wait w = new FluentWait(driver).withTimeout(30, TimeUnit.SECONDS).pollingEvery(5, TimeUnit.SECONDS).ignoring(NoSuchElementException);
 		 
 	}
+	
+	/**
+	 * Purpose-->>
+	 * Models a condition that might reasonably be expected to eventually evaluate to 
+	 * something that is neither null nor false.
+	 */
+	@Test
+	public void ExpecteddCondition(){
+		driver.get("http://localhost/ac/wp-admin");
+		WebDriverWait wait = new WebDriverWait(driver,10);
+		WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.name("wp-submit")));
+		element.click();
+	}
+	
 	
 	
 }
